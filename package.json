@@ -1,0 +1,24 @@
+{
+  "name": "of-type",
+  "version": "1.0.7",
+  "description": "Check if the given value is of the particular type or types.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "typeof",
+    "value",
+    "validation"
+  ],
+  "author": "Paweł Rafałko",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devrafalko/of-type.git"
+  },
+  "bugs": {
+    "url": "https://github.com/devrafalko/of-type/issues"
+  },
+  "homepage": "https://github.com/devrafalko/of-type#readme"
+}
