@@ -4,11 +4,14 @@
   "description": "Check if the given value is of the particular type or types.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node tests/jasmine.conf.js"
   },
   "keywords": [
     "typeof",
     "value",
+    "instanceof",
+    "type",
+    "validate",
     "validation"
   ],
   "author": "Paweł Rafałko",
@@ -20,5 +23,9 @@
   "bugs": {
     "url": "https://github.com/devrafalko/of-type/issues"
   },
-  "homepage": "https://github.com/devrafalko/of-type#readme"
+  "homepage": "https://github.com/devrafalko/of-type#readme",
+  "devDependencies": {
+    "jasmine": "^2.7.0",
+    "jasmine-spec-reporter": "^4.2.1"
+  }
 }
