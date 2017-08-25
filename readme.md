@@ -53,14 +53,14 @@ ofType(new Date(),/date/i) //returns true
 * The **`type`** can contain the value: `''` or `'any'` or `/any/`, It returns `true` for the **`val`** values of **any type**
 
 #### Return value
-The function `ofType()` returns `true` if the **`val`** is of the defined **type** or is one of the defined **types**.
+The function `ofType()` returns `true` if the **`val`** is of the defined **type** or is one of the defined **types**.  
 The function `ofType()` returns `false` if the **`val`** is not of the defined **type** or is none of the defined **types**
 
 # Tips
-> missing the `val` or `type` parameter will always return false *(without throwing errors)*
-> `ofType()`  //false
-> `ofType(undefined,undefined)`  //true
-> `ofType(undefined)`  //false
+> missing the `val` or `type` parameter will always return false *(without throwing errors)*  
+`ofType()`  //false  
+`ofType(undefined,undefined)`  //true  
+`ofType(undefined)`  //false
 
 # Tests
 ```
