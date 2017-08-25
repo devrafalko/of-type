@@ -173,7 +173,7 @@ ofType(new TypeError(),/(syntax|type)error/i);  //true
 ofType(new Error(),/(syntax|type)error/i);  //false
 ```
 
-##### for `types` [Function:Constructor] and [Array<function:constructor>]
+##### for `types` [Function|null|undefined] and [Array\<Function|null|undefined\>]
 ```javascript
 var ofType = require('of-type');
 
