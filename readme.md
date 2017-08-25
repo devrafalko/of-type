@@ -8,6 +8,7 @@
 
 ##### v2.0 features:
 * the value can be now checked with the `function:constructor` objects, `null` or `undefined` *(or array of these items)*
+* the **empty** array passed as the second argument is equal to 'any', or /any/ types. The modules function returns `true` for the values of **any** type.
 * the TypeError is not throwing when the arguments passed through module function are incorrect *(missing)*. It return `false` instead.
 * tests added
 
@@ -50,7 +51,7 @@ ofType(new Date(),/date/i) //returns true
 * The **`type`** can contain the value: `'arguments'` or `/arguments/`. It returns `true` for the `arguments` Object
 * The **`type`** can contain the value: `'truthy'` or `/truthy/`. It returns `true` for the **`val`** values like: `"abc"`, `true`, `1`, `{}`, `[]`,`function(){}`, etc.
 * The **`type`** can contain the value: `'falsy'` or `/falsy/`. It returns `true` for the **`val`** values like: `""`, `false`, `0`, `null`, `undefined`, etc.
-* The **`type`** can contain the value: `''` or `'any'` or `/any/`, It returns `true` for the **`val`** values of **any type**
+* The **`type`** can contain the value: `''` or `[]` or `'any'` or `/any/`, It returns `true` for the **`val`** values of **any type**
 
 #### Return value
 The function `ofType()` returns `true` if the **`val`** is of the defined **type** or is one of the defined **types**.  
@@ -186,6 +187,12 @@ ofType([1,2,3],Object);  //false
 ofType([1,2,3],Array);  //true
 ofType(Array,Array);  //false
 ofType(Array,Function);  //true
+
+ofType(null,[]);  //true
+ofType("hello world",[]);  //true
+ofType(Number,[]);  //true
+ofType(0,[]);  //true
+ofType(new Date(),[]);  //true
 
 ofType(null,null);  //true
 ofType(undefined,null);  //false

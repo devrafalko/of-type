@@ -19,6 +19,7 @@ module.exports = function(val,type){
   }
   
   if(tArr){
+    if(!type.length) return true;
     for(var i in type){
       if(type[i]===null&&vNull) return true;
       if(typeof type[i]==='undefined'&&vUnd) return true;
