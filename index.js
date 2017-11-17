@@ -15,7 +15,7 @@ module.exports = function(val,type){
   if(tUnd) return val===undefined;
   if(tFun){
     if(vUnd||vNull) return false;
-    return val.constructor.name === type.name;
+    return Object.getPrototypeOf(val).constructor.name === type.name;
   }
   
   if(tArr){
@@ -25,7 +25,7 @@ module.exports = function(val,type){
       if(typeof type[i]==='undefined'&&vUnd) return true;
       if(vNull||vUnd) continue;
       if(type[i]===null||typeof type[i]==='undefined') continue;
-      if(val.constructor.name === type[i].name) return true;
+      if(Object.getPrototypeOf(val).constructor.name === type[i].name) return true;
     }
     return false;
   }
@@ -38,8 +38,8 @@ module.exports = function(val,type){
     if(vUnd&&t.some((i)=>i==='undefined')) return true;
     if(vNull&&t.some((i)=>i==='null')) return true;
     if(vNull||val===undefined) return false;
-    if((reg).test(val.toString())&&val.constructor.name==='Object'&&t.some((i)=>i==='arguments')) return true;
-    return t.some((i)=>i===val.constructor.name.toLowerCase());
+    if((reg).test(val.toString())&&Object.getPrototypeOf(val).constructor.name==='Object'&&t.some((i)=>i==='arguments')) return true;
+    return t.some((i)=>i===Object.getPrototypeOf(val).constructor.name.toLowerCase());
   }
 
   if(tReg){
@@ -49,8 +49,8 @@ module.exports = function(val,type){
     if(type.test('undefined')&&vUnd) return true;
     if(type.test('null')&&vNull) return true;
     if(vNull||val===undefined) return false;
-    if(type.test('arguments')&&val.constructor.name==='Object'&&(reg).test(val.toString())) return true;
-    return type.test(val.constructor.name);
+    if(type.test('arguments')&&Object.getPrototypeOf(val).constructor.name==='Object'&&(reg).test(val.toString())) return true;
+    return type.test(Object.getPrototypeOf(val).constructor.name);
   }
   return false;
 };
