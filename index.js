@@ -20,16 +20,16 @@ module.exports = function(val,type){
   
   if(tArr){
     if(!type.length) return true;
-    for(var i in type){
-      if(type[i]===null&&vNull) return true;
-      if(typeof type[i]==='undefined'&&vUnd) return true;
+    for(var t of type){
+      if(t===null&&vNull) return true;
+      if(typeof t==='undefined'&&vUnd) return true;
       if(vNull||vUnd) continue;
-      if(type[i]===null||typeof type[i]==='undefined') continue;
-      if(Object.getPrototypeOf(val).constructor.name === type[i].name) return true;
+      if(t===null||typeof t==='undefined') continue;
+      if(Object.getPrototypeOf(val).constructor.name === t.name) return true;
     }
     return false;
   }
-  
+
   if(tString){
     var t = type.toLowerCase().split('|');
     if((t.length===1&&t[0]==='')||(t.some((i)=>i==='any'))) return true;
