@@ -41,8 +41,6 @@ The library is accessible as `ofType` variable in the global *(window)* scope.
 > npm install
 > npm test        //run tests in node
 > npm test deep   //run tests in node with errors shown
-> npm test-web    //run tests with karma + chrome
-> npm test-err    //run tests with karma + chrome with errors shown
 ```
 
 # Usage
