@@ -1,9 +1,8 @@
 /* global expect, describe, beforeEach, it */
-import ofType from './../src/index.js';
 
 describe('When the module is executed without any arguments',function(){
   beforeEach(function(){
-    this.b = ofType.bind(this);
+    this.b = this.ofType.bind(this);
   });
   
   it('it should return false',function(){
@@ -16,7 +15,7 @@ describe('When the module is executed without any arguments',function(){
 
 describe('When the module is executed without the second [type] parameter',function(){
   beforeEach(function(){
-    this.b = ofType.bind(this,'hello');
+    this.b = this.ofType.bind(this,'hello');
   });
   
   it('it should return false',function(){

@@ -1,12 +1,10 @@
 const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
-const UglifyPlugin = require('uglifyjs-webpack-plugin');
+const frontEnd = require('./webpack.frontend.js');
+const backEnd = require('./webpack.backend.js');
 
-module.exports = merge(common, {
+const dev = {
   mode: 'development',
-  optimization: {
-    minimize: false
-  },
   watch: true,
   stats: {
     version: false,
@@ -29,19 +27,10 @@ module.exports = merge(common, {
     publicPath: false,
     timings: true,
     usedExports: false
-  },
-  plugins:[
-    new UglifyPlugin({
-      uglifyOptions:{
-        compress:false,
-        mangle:false,
-        output:{
-          ecma:5,
-          indent_level:2,
-          comments:/^@/,
-          beautify:true
-        }
-      }
-    })
-  ]
-});
+  }
+};
+
+module.exports = [
+  merge(common, dev, backEnd),
+  merge(common, dev, frontEnd)
+];

@@ -1,221 +1,484 @@
 # Description
 
-`of-type` is a very light module *(function)* that checks whether the given value is of particular type *(or types)*.
+`of-type` is a very light module that checks if the given value is of the expected type *(or types)*.
 
-* Any bugs found? Give me to know on [GitHub](https://github.com/devrafalko/of-type)
-* Also check out [**`typeof-arguments`**](https://www.npmjs.com/package/typeof-arguments) to validate value types of the arguments passed through functions.
-* Also check out [**`typeof-properties`**](https://www.npmjs.com/package/typeof-properties) to validate value types of the properties of objects.
+Also see [`typeof-arguments`](https://www.npmjs.com/package/typeof-arguments) to validate types of the arguments passed through functions.  
+Also see [`typeof-properties`](https://www.npmjs.com/package/typeof-properties) to validate types of the objects' properties.
 
-##### v2.0 features:
-* the value can be now checked with the `'instance'` or `/instance/` extra type, `function:constructor` objects, `null` or `undefined` *(or array of these items)*
-* the **empty** array passed as the second argument is equal to 'any', or /any/ types. The modules function returns `true` for the values of **any** type.
-* the TypeError is not throwing when the arguments passed through module function are incorrect *(missing)*. It return `false` instead.
-* tests added
+# Implementation
 
-# Installation
+#### with NodeJS
 `npm install of-type`
 
 ```javascript
-var ofType = require('of-type');
+const type = require('of-type');
 
-ofType("hello world!",'string') //returns true
-ofType(true,'boolean|number|string') //returns true
-ofType(new Date(),/date/i) //returns true
+type('hello world!', 'string'); //true
+type(true, 'boolean|number|string'); //true
+type(new Date(), /date/i); //true
 ```
 
-# Usage
+#### with Browser
 
-### `ofType(val,type)`
-##### `val`
-* the value of any type
+#### Add `of-type.js` library to the HTML file.
+The library is located in `./dist/of-type.js` directory.  
+It is a webpack&babel bundled cross-browser library version.  
+The library is accessible as `ofType` variable in the global *(window)* scope.
 
-##### `type` **[String|RegExp|null|undefined|Function|Array]**
-* Checks if the **`val`** is of the **`type`** type.
-
-###### `type` [String]
-
-* Possible values: `'null'`, `'undefined'`, or any value equal to **`constructor.name`**, eg: `'string'`, `'number'`, `'regexp'`, `'array'`, `'object'`, `'boolean'`,`'buffer'`, etc.
-* The **`type`** [String] is case insensitive: `'String'`, `'string'`, `'StRiNg'` checks if the **`val`** is of type [String].
-* The **`type`** [String] can contain multiple allowed types, separated with `|`. eg: `'array|object'` checks if the **`val`** is of type [Array] **`OR`** of type [Object].
-
-###### `type` [RegExp]
-* Possible values: `/null/`, `/undefined/`, or any value matching the `constructor.name`, eg: `/String/`, `/Number/`, `/RegExp/`, `/Array/`, `/Object/`, `/Boolean/`,`/Buffer/`, `/Promise/`, etc.
-* For the case insensitivity use `i` flag, eg: `/string/i`, `/regexp/i`, `/typeerror/i`
-* For multiple values use regexp `(x|y)` expression, eg: `/String|Number/`, `/TypeError|Error/`
-
-###### `type` [null|undefined|Function|Array]
-* Possible values: `null`, `undefined` or any constructor, eg: `String`, `TypeError`, `Promise`, `Array`, etc.
-* For multiple values use array, eg: `[String,Object,Array,null]`
-
-> When you use **bundlers** or **minifiers**, use [String|RegExp] `type` **wisely** as bundlers may change the names of functions/constructors/classes in the output file and `type(myInstance,"MyClass")` that returns `true` before compilation, may return `false` after compilation, if the bundler minifies the `MyClass` constructor name.
-
-##### Extra types:
-* The **`type`** can contain the value: `'arguments'` or `/arguments/`. It returns `true` for the `arguments` Object
-* The **`type`** can contain the value : `'instance'` or `/instance/`. It returns `true` for the instances of **user classes** or **constructors**. It returns `false` for instances of **built-in** *(native)* constructors, eg. for `[]`, `"hello world"`, `{}`
-* The **`type`** can contain the value: `'truthy'` or `/truthy/`. It returns `true` for the **`val`** values like: `"abc"`, `true`, `1`, `{}`, `[]`,`function(){}`, etc.
-* The **`type`** can contain the value: `'falsy'` or `/falsy/`. It returns `true` for the **`val`** values like: `""`, `false`, `0`, `null`, `undefined`, `NaN`, etc.
-* The **`type`** can contain the value: `''` or `[]` or `'any'` or `/any/`, It returns `true` for the **`val`** values of **any type**
-
-#### Return value
-The function `ofType()` returns `true` if the **`val`** is of the defined **type** or is one of the defined **types**.  
-The function `ofType()` returns `false` if the **`val`** is not of the defined **type** or is none of the defined **types**
-
-# Tips
-> missing the `val` or `type` parameter will always return false *(without throwing errors)*  
-`ofType()`  //false  
-`ofType(undefined,undefined)`  //true  
-`ofType(undefined)`  //false
+```html
+<head>
+  <script src='of-type.js'></script>
+  <script>
+    ofType('hello world!', 'string'); //true
+  </script>
+</head>
+```
 
 # Tests
 ```
 > git clone https://github.com/devrafalko/of-type.git
 > cd of-type
 > npm install
-> npm test
-> npm run test-err //additionally displays error descriptions (when occur)
+> npm test        //run tests in node
+> npm test deep   //run tests in node with errors shown
+> npm test-web    //run tests with karma + chrome
+> npm test-err    //run tests with karma + chrome with errors shown
 ```
 
+# Usage
+
+### `type(val, type)`
+
+#### `val`
+It is any value|object which type should be checked.
+
+#### `type` **[String|RegExp|null|undefined|Function|Array]**
+The `val` value|object is expected to be of `type` type. There are many ways to check the `val` type. Choose the most convenient one:  
+  
+`[String]`
+* Possible values:  
+  * `'null'`, `'undefined'`  
+  * any value that equals to `val`.`constructor.name`, eg:  
+  `'string'`, `'number'`, `'regexp'`, `'array'`, `'object'`, `'boolean'`,`'buffer'`, etc.
+* The [String] `type` is case insensitive:
+  * `'String'`, `'string'`, `'StRiNg'` checks if the `val` is of `[String]` type
+  * `'RegExp'`, `'REGEXP'`, `'regexp'` checks if the `val` is of `[RegExp]` type
+* The [String] `type` can contain multiple types, separated with `|`:
+  * `'array|object'` checks if the `val` is of `[Array]` **`OR`** `[Object]` type
+  * `'undefined|null'` checks if the `val` is of `undefined` **`OR`** `null` type
+* See the [samples](#string-type)
+
+`[RegExp]`
+* Possible values: 
+  * `/null/`, `/undefined/`
+  * any value matching the `val`.`constructor.name`, eg: `/String/`, `/Number/`, `/RegExp/`, `/Array/`, `/Object/`, `/Boolean/`,`/Buffer/`, `/Promise/`, etc.
+* Use all regular expression's features to match the type in a desired way:
+  * `/Str/`, `/Err/`, `/Reg/`, `/B/`
+  * `/.+Error$/`, `/^RegExp$/`, 
+  * `/^[A-Z][a-z]+$/`
+* For the case insensitivity use `i` flag:
+  * `/string/i`, `/regexp/i`, `/TYPEERROR/i`
+* For multiple values use regexp `(x|y)` expression:
+  * `/String|Number/`, `/TypeError|Error/`, `/(obj|str)/i`
+* See the [samples](#regexp-type)
+
+`[Function|Array|null|undefined]`
+* Possible values:
+  * `null`, `undefined`
+  * any `[Function]` constructor, eg: `String`, `TypeError`, `Promise`, `Array`, etc.
+* For multiple values use array:
+  * `[String, Object, Array, null]`
+  * `[null, undefined, Boolean]`
+* See the [samples](#constructor-null-and-undefined)
+
+> When you use **bundlers** or **minifiers**, use `[String|RegExp]` `type` **wisely** as bundlers may change the names of functions|constructors|classes in the output file and eg. `type(myInstance, 'MyClass')` that returns `true` before compilation, may return `false` after compilation, if the bundler minifies the `'MyClass'` constructor name.
+
+### Extra types:
+
+`[String] 'arguments'` | `[RegExp] /arguments/`
+
+* The `type` `'arguments'` or `/arguments/` returns `true` for the function's `arguments` object
+* See the [samples](#arguments-type)
+
+`[String] 'instance'` | `[RegExp] /instance/`
+* The `type` `'instance'` or `/instance/` returns `true` for the instance of the user's class|constructor
+  * `type(MyInstance, 'instance'); //true`
+* It returns `false` for instances of built-in *(native)* constructors
+  * `[]`, `'hello world'`, `{}`
+* It returns `false` for instances that are the `global`|`window`'s properties
+* See the [samples](#instance-type)
+
+`[String] 'objectable'` | `[RegExp] /objectable/`
+* The `type` `'objectable'` or `/objectable/` returns `true` for the objects that are the instances of `Object` constructor
+  * `{}`, `[]`, `new String('hello world')`, `new Boolean(1)`
+* It returns `false` for the primitive values and simple values
+  * `'hello world'`, `true`, `10`, `null`, `undefined`
+* See the [samples](#objectable-type)
+
+`[String] 'truthy'` | `[RegExp] /truthy/`
+* The `type` `'truthy'` or `/truthy/` returns `true` for the values like:
+  * `'abc'`, `true`, `1`, `-1`, `{}`, `[]`, `function(){}`
+* See the [samples](#truthy-type)
+
+`[String] 'falsy'` | `[RegExp] /falsy/`
+* The `type` `'falsy'` or `/falsy/` returns `true` for the values like:
+  * `''`, `false`, `0`, `null`, `undefined`, `NaN`
+* See the [samples](#falsy-type)
+
+`[String] 'any'` | `[RegExp] /any/` | `[Array] []` | `[String] ""`
+* The `type` `'any'` or `/any/` or empty array `[]` or empty string `""` returns `true` for the values of any type
+* See the [samples](#any-type)
+
+### Return value
+The function `type()` returns `true` if the `val` argument is of expected `type`.  
+The function `type()` returns `false` if the `val` argument is not of expected `type`.
+
+# Tips
+> Missing the `val` or `type` arguments will always return `false` *(without throwing error)*. 
+```javascript 
+type(); //false  
+type(undefined, undefined); //true  
+type(undefined); //false
+```
 # Samples
 
-##### for `types` [String]
+### `[String]` `type`
 ```javascript
-var ofType = require('of-type');
+import type from `of-type`;
 
-ofType("hello world",'string');  //true
-ofType(10,'number');  //true
-ofType([1,2,3],'array');  //true
-ofType([1,2,3],'object');  //false
-ofType(true,'boolean');  //true
-ofType(/hello/,'regexp');  //true
-ofType({name:"Paul"},'object');  //true
-ofType({name:"Paul"},'instance'); //false
-ofType({name:"Paul"},'instance'); //false
-ofType([1,2,3],'function');  //true
+type('hello world', 'String'); //true
+type(10, 'Number'); //true
+type(null, 'null'); //true
+type(undefined, 'undefined'); //true
+type([1,2,3], 'Array'); //true
+type([1,2,3], 'Object'); //false
+type(true, 'Boolean'); //true
+type(type, 'function'); //true
+type(/hello/, 'RegExp'); //true
+type({ framework: 'React' }, 'Object'); //true
 
-ofType((function(){return arguments;})(),'arguments');  //true
-ofType((function(){return arguments;})(),'object');  //true, MIND that the Object is the constructor
-ofType(()=>{},'FuNcTiOn');  //true
-ofType(ofType,'function');  //true
+type('hello world', 'string'); //true
+type('hello world', 'STRING'); //true
+type('hello world', 'str'); //false
+type(true, 'BOOLEAN'); //true
+type(false, 'BoOlEaN'); //true
+type(false, 'Bool'); //false
+type(null, 'NULL'); //true
 
-ofType(new Date(),'DATE');  //true
-ofType(new Array(1,2,3),'array');  //true
-ofType(new Buffer(0),'buffer');  //true
-ofType(new String("abc"),'string');  //true
-ofType((()=>"abc")(),'string');  //true
+type(new Date(), 'DATE'); //true
+type(new Array(1,2,3), 'array'); //true
+type(new Buffer(0), 'buffer'); //true
+type(new String('hello world'), 'string'); //true
 
-ofType(Date,'date');  //false
-ofType(Date,'function');  //true
-ofType(Array,'function');  //true
-ofType(Array,'instance');  //false
+type(()=>{}, 'function'); //true
+type((()=>'hello world')(), 'string'); //true
 
-ofType(10,'string|number');  //true
-ofType(10,'string|array');  //false
-ofType(null,'undefined|null');  //true
+type(Date, 'date'); //false
+type(Date, 'function'); //true
+type(Array, 'Function'); //true
 
-ofType("",'falsy');  //true
-ofType(0,'falsy');  //true
-ofType(null,'falsy');  //true
-ofType(undefined,'falsy');  //true
+type(new Error(), 'error'); //true
+type(new TypeError(), 'typeerror'); //true
+type(new SyntaxError(), 'syntaxerror'); //true
+type(new SyntaxError(), 'error'); //false
 
-ofType(10,'any|string');  //true
-ofType("hello world",'');  //true
-ofType(false,'any');  //true
+type(document.createElement('DIV'), 'htmldivelement'); //true
+type(document.createElement('DIV'), 'element'); //false
+type(document.createElement('LI'), 'HtmlLiElement'); //true
 
-ofType(true,'truthy');  //true
-ofType("hello world",'truthy');  //true
-ofType("",'truthy');  //false
-ofType(new String(""),'truthy')  //true
-ofType(new String("").valueOf(),'truthy')  //false
-ofType([1,2,3],'truthy') //true
-ofType([],'truthy') //true
+type((function(){ return arguments; })(), 'object'); //true; constructor.name === "Object"
 
-ofType(new Error(),'error');  //true
-ofType(new TypeError(),'typeerror');  //true
-ofType(new SyntaxError(),'syntaxerror');  //true
-ofType(new SyntaxError(),'error');  //false
+class Name{};
+type(new Name(), 'Name'); //true
+type(new Name(), 'name'); //true
+type(new Name(), 'object'); //false; constructor.name === 'Name'
 
-ofType(document.createElement('DIV'),'htmldivelement');  //true
-ofType(document.createElement('DIV'),'element');  //false
-ofType(document.createElement('LI'),'HtmlLiElement');  //true
-
-function Name(){};
-ofType(new Name(),'Name');  //true
-ofType(new Name(),'name');  //true
-ofType(new Name(),'object');  //false, MIND that this is not the instance of Object constructor
-ofType(new Name(),'instance') //true
-
+type(10, 'string|number'); //true
+type(10, 'string|array'); //false
+type(null, 'undefined|null'); //true
 ```
 
-##### for `types` [RegExp]
+### `[RegExp]` `type`
 ```javascript
-var ofType = require('of-type');
+import type from `of-type`;
 
-ofType("hello",/string/);  //false
-ofType("hello",/String/);  //true
-ofType("hello",/string/i);  //true
-ofType(10,/string|number/i);  //true
-ofType(0,/Number/);  //true
-ofType(!0,/Boolean/);  //true
+type('hello world', /String/); //true
+type(10, /Number/); //true
+type(null, /null/); //true
+type(undefined, /undefined/); //true
+type([1,2,3], /Array/); //true
+type([1,2,3], /Object/); //false
+type(true, /Boolean/); //true
+type(type, /Function/); //true
+type(/hello/, /RegExp/); //true
+type({ framework: 'React' }, /Object/); //true
 
-ofType((function(){return arguments;})(),/arguments/);  //true
-ofType((function(){return arguments;})(),/arg/);  //true
-ofType((function(){return arguments;})(),/object/i);  //true
+type('hello world', /string/); //false
+type('hello world', /STRING/); //false
+type('hello world', /string/i); //true
+type('hello world', /STRING/i); //true
+type('hello world', /Str/); //true
+type('hello world', /^str/i); //true
+type(true, /BOOLEAN/); //false
+type(false, /BoOlEaN/); //false
+type(true, /BOOLEAN/i); //true
+type(false, /BoOlEaN/i); //true
+type(false, /Bool/); //true
+type(false, /bool/i); //true
+type(null, /NULL/); //false
+type(null, /NULL/i); //true
 
-ofType(123,/any/);  //true
-ofType("123",/ANY/i);  //true
-ofType([1,2,3],/any/);  //true
+type({}, /^[A-Z][a-z]+$/); //true
+type(true, /^[A-Z][a-z]+$/); //true
+type(null, /^[A-Z][a-z]+$/); //false
+type(undefined, /^[A-Z][a-z]+$/); //false
 
-ofType(document.createElement('DIV'),/^html.*element$/i);  //true
-ofType(document.createElement('DIV'),/^[a-z]+div[a-z]+$/i);  //true
-ofType(document.createElement('A'),/anchor/i);  //true
-ofType(document.createElement('UL'),/html[uo]listelement/i);  //true
-ofType(document.createElement('OL'),/html[uo]listelement/i);  //true
+type((function(){ return arguments; })(), /object/i); //true; constructor.name === "Object"
 
-ofType(null,/falsy/);  //true
-ofType(0,/falsy/);  //true
-ofType([1,2,3],/truthy/);  //true
-ofType("",/truthy/);  //false
+type(document.createElement('DIV'), /^html.*element$/i); //true
+type(document.createElement('DIV'), /^[a-z]+div[a-z]+$/i); //true
+type(document.createElement('A'), /anchor/i); //true
+type(document.createElement('UL'), /html[uo]listelement/i); //true
+type(document.createElement('OL'), /html[uo]listelement/i); //true
 
-ofType(new SyntaxError(),/(syntax|type)error/i);  //true
-ofType(new TypeError(),/(syntax|type)error/i);  //true
-ofType(new Error(),/(syntax|type)error/i);  //false
+type(10, /string|number/i); //true
+type(undefined, /und|null/i); //true
+type(new SyntaxError(), /(syntax|type)error/i); //true
+type(new TypeError(), /(syntax|type)error/i); //true
+type(new Error(), /(syntax|type)?error/i); //true
 
-function Name(){};
-ofType(new Name(),/Name/);  //true
-ofType(new Name(),/name/);  //false
-ofType(new Name(),/name/i);  //true
-ofType(new Name(),/Object/);  //false, MIND that this is not the instance of Object constructor
-ofType(new Name(),/instance/) //true
+class Name(){};
+type(new Name(), /Name/); //true
+type(new Name(), /name/); //false
+type(new Name(), /name/i); //true
+type(new Name(), /Object/); //false; constructor.name === 'Name'
 ```
 
-##### for `types` [Function|null|undefined] and [Array\<Function|null|undefined\>]
+### `constructor`, `null` and `undefined`
 ```javascript
-var ofType = require('of-type');
+import type from `of-type`;
 
-ofType("hello",String);  //true
-ofType("hello",Number);  //false
-ofType("hello",[String,Number]);  //true
-ofType(10,Number);  //true
-ofType(false,Boolean);  //true
-ofType([1,2,3],Object);  //false
-ofType([1,2,3],Array);  //true
-ofType(Array,Array);  //false
-ofType(Array,Function);  //true
+type('hello world', String); //true
+type(10, Number); //true
+type(null, null); //true
+type(undefined, undefined); //true
+type(null, undefined); //false
+type({}.name, undefined); //true
+type([1,2,3], Array); //true
+type([1,2,3], Object); //false
+type(true, Boolean); //true
+type(type, Function); //true
+type(/hello/, RegExp); //true
+type({ framework: 'React' }, Object); //true
+type((function(){ return arguments; })(), Object); //true; constructor.name === "Object"
 
-ofType(null,[]);  //true
-ofType("hello world",[]);  //true
-ofType(Number,[]);  //true
-ofType(0,[]);  //true
-ofType(new Date(),[]);  //true
+type(new Date(), Date); //true
+type(new Array(1,2,3), Array); //true
+type(new Buffer(0), Buffer); //true
+type(new String('hello world'), String); //true
 
-ofType(null,null);  //true
-ofType(undefined,null);  //false
-ofType(false,null);  //false
+type(()=>{}, Function); //true
+type((()=>'hello world')(), String); //true
 
-ofType({}.name,undefined);  //true
-ofType(undefined,undefined);  //true
-ofType(null,undefined);  //false
+type(Date, Date); //false
+type(Date, Function); //true
+type(Array, Function); //true
 
-ofType(new RangeError('error'),Error);  //false
-ofType(new RangeError('error'),[Error,TypeError,RangeError]);  //true
+type(new Error(), Error); //true
+type(new TypeError(), TypeError); //true
+type(new SyntaxError(), SyntaxError); //true
+type(new SyntaxError(), Error); //false
+type(new RangeError(), [Error, TypeError, RangeError]); //true
+
+class Name{};
+type(new Name(), Name); //true
+type(new Name(), Object); //false; constructor.name === 'Name'
+
+type(10, [String, Number]); //true
+type(10, [String, Array]); //false
+type(null, [undefined, null]); //true
+```
+
+### `arguments` type
+```javascript
+import type from `of-type`;
+
+function hello(){
+  return arguments;
+}
+
+type(hello(), 'arguments'); //true
+type(hello(), 'ARGUMENTS'); //true
+type(hello(), 'arg'); //false
+type(hello(), /arguments/); //true
+type(hello(), /ARGUMENTS/); //false
+type(hello(), /ARGUMENTS/i); //true
+type(hello(), /arg/); //false
+
+type(hello(), 'arguments|object|instance'); //true
+type(hello(), /arguments|undefined/); //true
+```
+
+### `instance` type
+```javascript
+import type from `of-type`;
+
+class Name{ }
+
+type(new Name(), 'instance'); //true
+type(new Name(), 'INSTANCE'); //true
+type(new Name(), 'inst'); //false
+type(new Name(), /instance/); //true
+type(new Name(), /INSTANCE/); //false
+type(new Name(), /INSTANCE/i); //true
+type(new Name(), /inst/); //false
+
+type({}, 'instance'); //false
+type([], 'instance'); //false
+type(Array, 'instance'); //false
+type(new Error(), /instance/); //false
+type('hello world', /instance/) //false
+
+global.Framework = class Framework{ };
+window.Cars = class Cars{ };
+
+type(new Framework(), 'instance'); //false
+type(new Framework(), /instance/); //false
+type(new Cars(), 'instance'); //false
+type(new Cars(), /instance/); //false
+
+type({}, 'instance|object'); //true
+type(new String(), /instance|objectable/); //true
+```
+
+### `objectable` type
+```javascript
+import type from `of-type`;
+type('hello world', 'objectable'); //false
+type(10, 'objectable'); //false
+type(null, 'objectable'); //false
+type(undefined, 'objectable'); //false
+type(true, 'objectable'); //false
+type({}, 'objectable'); //true
+type({}.name, 'objectable'); //false
+type([1,2,3], 'objectable'); //true
+type(/hello/, 'objectable'); //true
+type(type, 'objectable'); //true
+type((function(){ return arguments; })(), 'objectable'); //true; (arguments instanceof Object) === true
+
+class Name{}
+type(new Name(), 'objectable'); //true
+type(new String('hello world'), 'objectable'); //true
+type(new Number(10), 'objectable'); //true
+type(new Error(), 'objectable'); //true
+
+type({}, 'objectable'); //true
+type({}, 'OBJECTABLE'); //true
+type({}, 'obj'); //false
+type({}, /objectable/); //true
+type({}, /OBJECTABLE/); //false
+type({}, /OBJECTABLE/i); //true
+type({}, /objecta/); //false; as it's unrecognizable custom type
+type({}, /obj/i); //true; as it still matches constructor.name === 'Object'
+
+type(0, 'objectable|falsy'); //true
+type('hello world', /objectable|string/i); //true
+type({}, /object(able)?/i); //true
+type([], /object(able)?/i); //true
+```
+
+### `truthy` type
+```javascript
+import type from `of-type`;
+
+type('hello world', 'truthy'); //true
+type('', 'truthy'); //false
+type(new String(''), 'truthy'); //true
+type(new String('').valueOf(), 'truthy');  //false
+type(10, 'truthy'); //true
+type(0, 'truthy'); //false
+type(null, 'truthy'); //false
+type(undefined, 'truthy'); //false
+type([1,2,3], 'truthy'); //true
+type([], 'truthy'); //true
+type(true, 'truthy'); //true
+type(false, 'truthy'); //false
+type(type, 'truthy'); //true
+type(/hello/, 'truthy'); //true
+type({ framework: 'React' }, 'truthy'); //true
+type({}.name, 'truthy'); //false
+
+type(true, 'truthy'); //true
+type(true, 'TRUTHY'); //true
+type(true, 'tru'); //false
+type(true, /truthy/); //true
+type(true, /TRUTHY/); //false
+type(true, /TRUTHY/i); //true
+type(true, /tru/); //false; as it's unrecognizable custom type
+
+type(undefined, 'truthy|null'); //false
+type(0, 'truthy|number'); //true
+type(false, /truthy|Boolean/); //true
+```
+
+### `falsy` type
+```javascript
+import type from `of-type`;
+type('hello world', 'falsy'); //false
+type('', 'falsy'); //true
+type(new String(''), 'falsy'); //false
+type(new String('').valueOf(), 'falsy');  //true
+type(10, 'falsy'); //false
+type(0, 'falsy'); //true
+type(null, 'falsy'); //true
+type(undefined, 'falsy'); //true
+type([1,2,3], 'falsy'); //false
+type([], 'falsy'); //false
+type(true, 'falsy'); //false
+type(false, 'falsy'); //true
+type(type, 'falsy'); //false
+type(/hello/, 'falsy'); //false
+type({ framework: 'React' }, 'falsy'); //false
+type({}.name, 'falsy'); //true
+
+type(false, 'falsy'); //true
+type(false, 'FALSY'); //true
+type(false, 'fal'); //false
+type(false, /falsy/); //true
+type(false, /FALSY/); //false
+type(false, /FALSY/i); //true
+type(false, /fal/); //false; as it's unrecognizable custom type
+
+type([], 'falsy|objectable'); //true
+type(10, 'falsy|number'); //true
+type(true, /falsy|Boolean/); //true
+```
+
+### `any` type
+```javascript
+import type from `of-type`;
+
+type('hello world', 'any'); //true
+type('', 'any'); //true
+type(new String(''), 'any'); //true
+type(10, 'any'); //true
+type(0, /any/); //true
+type(null, /any/); //true
+type(undefined, /any/); //true
+type([1,2,3], /any/); //true
+type([], []); //true
+type(true, []); //true
+type(false, []); //true
+type(type, []); //true
+type(/hello/, ''); //true
+type({ framework: 'React' }, ''); //true
+type({}.name, ''); //true
+
+type({}, 'any'); //true
+type({}, 'ANY'); //true
+type({}, 'an'); //false
+type({}, /any/); //true
+type({}, /ANY/); //false
+type({}, /ANY/i); //true
+type({}, /an/); //false; as it's unrecognizable custom type
 ```
