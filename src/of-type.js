@@ -46,11 +46,11 @@ class OfType {
   }
 
   get isTypeArray(){
-    return !this.isTypeNull && typeof this._type === 'object' && this._type.constructor.name === 'Array';
+    return !this.isTypeNull && typeof this._type === 'object' && this._type.constructor === Array;
   }
 
   get isTypeRegExp(){
-    return this._type && this._type.constructor.name === 'RegExp';
+    return this._type && this._type.constructor === RegExp;
   }
 
   get argumentsRegExp(){
@@ -76,7 +76,7 @@ class OfType {
 
   _typeConstructor(){
     if (this.isValueUndefined || this.isValueNull) return false;
-    return Object.getPrototypeOf(this._value).constructor.name === this._type.name;
+    return Object.getPrototypeOf(this._value).constructor === this._type;
   }
 
   _typeArray(){
@@ -86,7 +86,7 @@ class OfType {
       if (typeof t === 'undefined' && this.isValueUndefined) return true;
       if (this.isValueNull || this.isValueUndefined) continue;
       if (t === null || typeof t === 'undefined') continue;
-      if (Object.getPrototypeOf(this._value).constructor.name === t.name) return true;
+      if (Object.getPrototypeOf(this._value).constructor === t) return true;
     }
     return false;
   }
@@ -100,7 +100,7 @@ class OfType {
     if (this.isValueNull && typeList.some((i) => i === 'null')) return true;
     if (this.isValueNull || this._value === undefined) return false;
     const valueConstructor = Object.getPrototypeOf(this._value).constructor;
-    if ((this.argumentsRegExp).test(this._value.toString()) && valueConstructor && valueConstructor.name === 'Object' && typeList.some((i) => i === 'arguments')) return true;
+    if ((this.argumentsRegExp).test(this._value.toString()) && valueConstructor && valueConstructor === Object && typeList.some((i) => i === 'arguments')) return true;
     if (typeList.some((i) => i === 'instance') && this.isValueObject && valueConstructor && valueConstructor !== _g()[valueConstructor.name]) return true;
     if (typeList.some((i) => i === 'objectable') && this.isObjectInstance) return true;
     return typeList.some((i) => i === Object.getPrototypeOf(this._value).constructor.name.toLowerCase());
@@ -114,7 +114,7 @@ class OfType {
     if (this._type.test('null') && this.isValueNull) return true;
     if (this.isValueNull || this._value === undefined) return false;
     const valueConstructor = Object.getPrototypeOf(this._value).constructor;
-    if (this._exec('arguments') && valueConstructor && valueConstructor.name === 'Object' && (this.argumentsRegExp).test(this._value.toString())) return true;
+    if (this._exec('arguments') && valueConstructor && valueConstructor === Object && (this.argumentsRegExp).test(this._value.toString())) return true;
     if (this._exec('instance') && this.isValueObject && valueConstructor && valueConstructor !== _g()[valueConstructor.name]) return true;
     if (this._exec('objectable') && this.isObjectInstance) return true;
     return this._type.test(Object.getPrototypeOf(this._value).constructor.name);
